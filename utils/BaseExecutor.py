@@ -2,7 +2,7 @@ import psycopg2
 import pandas as pd
 
 class BaseExecutor:
-    def __init__(self, db_config):
+    def __init__(self, db_config = None):
         """
         Initialize the database connection configuration.
         
