@@ -1,6 +1,7 @@
 from psycopg2 import sql
 from config.config import base_executor
 from controller.dto.AddNewInternBody import AddNewInternBody
+from controller.dto.UpdateInternBody import UpdateInternBody
 
 class InternsInfoService():
     
@@ -22,6 +23,28 @@ class InternsInfoService():
         values = (body.name, body.mailId, body.hobbies)
         try:
             rows_affected, message = base_executor.executeInsert(query=query, values=values)
+            return {"rows_affected": rows_affected, "message": message}
+        except Exception as e:
+            return {"error": str(e)}
+        
+    def updateIntern(self, id:int, body:UpdateInternBody):
+        query = sql.SQL("""
+                    update interns_schema.interns_details
+                    set name = %s, mail_id = %s, hobbies = %s
+                    where id = %s
+                    """)
+        values = (body.name, body.mailId, body.hobbies, id)
+        try:
+            rows_affected, message = base_executor.executeUpdate(query=query, values=values)
+            return {"rows_affected": rows_affected, "message": message}
+        except Exception as e:
+            return {"error": str(e)}
+        
+    def deleteIntern(self, id:int):
+        query = sql.SQL("DELETE FROM interns_schema.interns_details WHERE id = %s")
+        values = (id,)
+        try:
+            rows_affected, message = base_executor.executeUpdate(query=query, values=values)
             return {"rows_affected": rows_affected, "message": message}
         except Exception as e:
             return {"error": str(e)}
